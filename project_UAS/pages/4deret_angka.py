@@ -1,147 +1,120 @@
 import streamlit as st
+from template_sidebar import sidebar_menu
 
 # ======================
-# PAGE CONFIG (WAJIB PALING ATAS)
+# PAGE CONFIG
 # ======================
 st.set_page_config(
     page_title="Deret Angka",
     layout="wide"
 )
 
-from template_sidebar import sidebar_menu
-
 sidebar_menu()
 
-col1, col2, col3 = st.columns([1, 2, 1])
+st.title("📊 Deret Angka")
+st.caption("Mode Belajar & Latihan dalam satu halaman")
 
-with col3:
-    st.markdown(
-        """
-        <style>
-        .gif-row {
-            display:flex;
-            justify-content:center;
-            gap:6px;
-            flex-wrap: wrap;
-        }
-        </style>
+# ======================
+# MODE
+# ======================
+mode = st.radio(
+    "Pilih Mode:",
+    ["📘 Mode Belajar", "✏️ Mode Latihan"],
+    horizontal=True
+)
 
-        <div class="gif-row">
-            <img src="https://media.giphy.com/media/cKKilkePjBAh0tbmBU/giphy.gif" width="500">
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+st.divider()
 
-with col2:
-    st.markdown(
-        """
-        <div class="gif-row">
-            <img src="https://media.giphy.com/media/s3LOGptCH4vgk/giphy.gif" width="400">
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-with col1:
-    st.title("Aplikasi Deret Angka Lengkap")
-    st.caption("Materi + Penyelesai Soal Deret Angka")
-
-menu = st.selectbox(
-    "Pilih Menu",
+# ======================
+# PILIH JENIS DERET
+# ======================
+jenis = st.selectbox(
+    "Pilih Jenis Deret:",
     [
-        "Materi Deret Angka",
-        "Eksplorasi Deret",
-        "Penyelesai Soal"
+        "Aritmatika",
+        "Geometri",
+        "Fibonacci",
+        "Bilangan Ganjil",
+        "Bilangan Genap"
     ]
 )
 
-if menu == "Materi Deret Angka":
-    st.header("Materi Dasar Deret Angka")
+st.divider()
 
-    st.subheader("Pengertian")
-    st.write("""
-    Deret angka adalah susunan bilangan yang mengikuti pola tertentu.
-    """)
+# ======================================================
+# MODE BELAJAR
+# ======================================================
+if mode == "📘 Mode Belajar":
 
-    st.subheader("Jenis Deret Angka")
-    st.write("""
-    - Deret Aritmatika  
-    - Deret Geometri  
-    - Deret Fibonacci  
-    - Deret Ganjil  
-    - Deret Genap  
-    """)
-
-elif menu == "Eksplorasi Deret":
-    st.header("Eksplorasi Deret Angka")
-
-    jenis = st.selectbox(
-        "Pilih Jenis Deret",
-        ["Aritmatika", "Geometri", "Fibonacci", "Ganjil", "Genap"]
-    )
-
-    n = st.slider("Jumlah suku", 1, 20, 10)
+    st.header("📚 Materi Deret Angka")
 
     if jenis == "Aritmatika":
-        a = st.number_input("Suku pertama", value=1)
-        d = st.number_input("Beda", value=2)
-        st.write([a + i*d for i in range(n)])
+        st.subheader("Deret Aritmatika")
+        st.write("Deret dengan selisih (beda) yang tetap.")
+        st.latex("U_n = a + (n - 1)d")
+        st.write("Contoh: 2, 4, 6, 8, 10")
 
     elif jenis == "Geometri":
-        a = st.number_input("Suku pertama", value=1)
-        r = st.number_input("Rasio", value=2)
-        st.write([a * (r**i) for i in range(n)])
+        st.subheader("Deret Geometri")
+        st.write("Deret dengan rasio yang tetap.")
+        st.latex("U_n = a \\times r^{(n-1)}")
+        st.write("Contoh: 2, 4, 8, 16")
 
     elif jenis == "Fibonacci":
-        fib = [0, 1]
-        for i in range(2, n):
-            fib.append(fib[i-1] + fib[i-2])
-        st.write(fib[:n])
+        st.subheader("Deret Fibonacci")
+        st.write("Setiap suku adalah jumlah dua suku sebelumnya.")
+        st.latex("F_n = F_{n-1} + F_{n-2}")
+        st.write("Contoh: 0, 1, 1, 2, 3, 5")
 
-    elif jenis == "Ganjil":
-        st.write([2*i + 1 for i in range(n)])
+    elif jenis == "Bilangan Ganjil":
+        st.subheader("Deret Bilangan Ganjil")
+        st.latex("U_n = 2n - 1")
+        st.write("Contoh: 1, 3, 5, 7, 9")
 
-    elif jenis == "Genap":
-        st.write([2*i for i in range(n)])
+    elif jenis == "Bilangan Genap":
+        st.subheader("Deret Bilangan Genap")
+        st.latex("U_n = 2n")
+        st.write("Contoh: 2, 4, 6, 8, 10")
 
-elif menu == "Penyelesai Soal":
-    st.header("Penyelesai Soal Deret Angka")
+# ======================================================
+# MODE LATIHAN
+# ======================================================
+elif mode == "✏️ Mode Latihan":
 
-    soal = st.selectbox(
-        "Pilih Jenis Soal",
-        [
-            "Aritmatika",
-            "Geometri",
-            "Fibonacci",
-            "Ganjil",
-            "Genap"
-        ]
-    )
+    st.header("🧮 Latihan Menghitung Deret")
 
-    if soal == "Aritmatika":
-        a = st.number_input("a", value=2)
-        d = st.number_input("d", value=3)
-        n = st.number_input("n", min_value=1, value=5)
-        st.success(f"Hasil: {a + (n-1)*d}")
+    n = st.number_input("Masukkan suku ke-n", min_value=1, value=5)
 
-    elif soal == "Geometri":
-        a = st.number_input("a", value=2)
-        r = st.number_input("r", value=2)
-        n = st.number_input("n", min_value=1, value=5)
-        st.success(f"Hasil: {a * r**(n-1)}")
+    if jenis == "Aritmatika":
+        a = st.number_input("Suku pertama (a)", value=2)
+        d = st.number_input("Beda (d)", value=3)
 
-    elif soal == "Fibonacci":
-        n = st.number_input("n", min_value=1, value=7)
-        fib = [0, 1]
-        for i in range(2, n):
-            fib.append(fib[i-1] + fib[i-2])
-        st.success(f"Hasil: {fib[n-1]}")
+        if st.button("Hitung"):
+            hasil = a + (n - 1) * d
+            st.success(f"Hasil suku ke-{n} = {hasil}")
 
-    elif soal == "Ganjil":
-        n = st.number_input("n", min_value=1, value=5)
-        st.success(f"Hasil: {2*n - 1}")
+    elif jenis == "Geometri":
+        a = st.number_input("Suku pertama (a)", value=2)
+        r = st.number_input("Rasio (r)", value=2)
 
-    elif soal == "Genap":
-        n = st.number_input("n", min_value=1, value=5)
-        st.success(f"Hasil: {2*n}")
+        if st.button("Hitung"):
+            hasil = a * r ** (n - 1)
+            st.success(f"Hasil suku ke-{n} = {hasil}")
+
+    elif jenis == "Fibonacci":
+        if st.button("Hitung"):
+            fib = [0, 1]
+            for i in range(2, n):
+                fib.append(fib[i-1] + fib[i-2])
+            st.success(f"Hasil suku ke-{n} = {fib[n-1]}")
+            st.write("Deret:", fib[:n])
+
+    elif jenis == "Bilangan Ganjil":
+        if st.button("Hitung"):
+            hasil = 2 * n - 1
+            st.success(f"Hasil suku ke-{n} = {hasil}")
+
+    elif jenis == "Bilangan Genap":
+        if st.button("Hitung"):
+            hasil = 2 * n
+            st.success(f"Hasil suku ke-{n} = {hasil}")
